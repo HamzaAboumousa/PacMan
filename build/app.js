@@ -1104,6 +1104,7 @@ class GameCoordinator {
     this.mainMenu = document.getElementById('main-menu-container');
     this.gameStartButton = document.getElementById('game-start');
     this.pauseButton = document.getElementById('pause-button');
+    this.restartButton = document.getElementById('restart-button');
     this.soundButton = document.getElementById('sound-button');
     this.leftCover = document.getElementById('left-cover');
     this.rightCover = document.getElementById('right-cover');
@@ -1185,6 +1186,7 @@ class GameCoordinator {
       this.startButtonClick.bind(this),
     );
     this.pauseButton.addEventListener('click', this.handlePauseKey.bind(this));
+    this.restartButton.addEventListener('click',this.handleRestartKey.bind(this));
     this.soundButton.addEventListener(
       'click',
       this.soundButtonClick.bind(this),
@@ -1875,6 +1877,32 @@ class GameCoordinator {
         });
       }
     }
+  }
+
+  handleRestartKey() {
+    this.leftCover.style.left = '-50%';
+    this.rightCover.style.right = '-50%';
+    this.mainMenu.style.opacity = 0;
+    this.gameStartButton.disabled = true;
+
+    setTimeout(() => {
+      this.mainMenu.style.visibility = 'hidden';
+    }, 1000);
+
+    this.reset();
+    if (this.firstGame) {
+      this.firstGame = false;
+      this.init();
+    }
+    this.startGameplay(true);
+    this.gameEngine.changePausedState(this.gameEngine.running);
+      this.soundManager.play('pause');
+        this.soundManager.resumeAmbience();
+        this.gameUi.style.filter = 'unset';
+        this.movementButtons.style.filter = 'unset';
+        this.pausedText.style.visibility = 'hidden';
+        this.pauseButton.innerHTML = 'pause';
+
   }
 
   /**

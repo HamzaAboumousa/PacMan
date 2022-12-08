@@ -8,10 +8,20 @@
 
 body {
   margin: 0;
-  overflow: hidden; }
+  overflow: hidden;
+  background-image: url("../app/style/graphics/backg.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment:fixed;
+    background-position: center;
+}
 
 .overflow-mask {
-  background-color: #000;
+  background-image: url("../app/style/graphics/backg.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment:fixed;
+    background-position: center;
   color: #fff;
   display: flex;
   height: 100vh;
@@ -57,9 +67,10 @@ body {
 .paused-text {
   align-items: center;
   display: flex;
+  flex-direction: column;
   font-size: 50px;
   height: 100%;
-  justify-content: center;
+  justify-content: space-around;
   left: 0;
   position: absolute;
   user-select: none;
@@ -110,7 +121,12 @@ body {
     height: 66%; } }
 
 .loading-cover {
-  background: #ffdf00;
+  background-image: url("../app/style/graphics/backg.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment:fixed;
+    background-position: center;
+    backdrop-filter: blur(5px);
   height: 100vh;
   position: absolute;
   top: 0;
@@ -126,6 +142,7 @@ body {
   transition: right 0.5s 0.5s; }
 
 .main-menu-container {
+  backdrop-filter: blur(5px);
   align-items: center;
   display: flex;
   flex-direction: column;
@@ -354,6 +371,7 @@ body {
   position: relative; }
 
 .maze-img {
+  border-radius: 2%;
   position: absolute;
   user-select: none;
   width: 100%; }
