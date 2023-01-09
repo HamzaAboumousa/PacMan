@@ -823,7 +823,9 @@ class Ghost {
   }
 }
 
-
+let seconds = 0;
+let minutes = 0;
+let timerId;
 class Pacman {
   constructor(scaledTileSize, mazeArray, characterUtil) {
     this.scaledTileSize = scaledTileSize;
@@ -1111,6 +1113,7 @@ class GameCoordinator {
     this.pausedText = document.getElementById('paused-text');
     this.bottomRow = document.getElementById('bottom-row');
     this.movementButtons = document.getElementById('movement-buttons');
+    this.time = document.getElementById('timer-display');
 
     this.mazeArray = [
       ['XXXXXXXXXXXXXXXXXXXXXXXXXXXX'],
@@ -1602,7 +1605,7 @@ class GameCoordinator {
    */
   init() {
     this.registerEventListeners();
-
+    
     this.gameEngine = new GameEngine(this.maxFps, this.entityList);
     this.gameEngine.start();
   }
@@ -1642,6 +1645,7 @@ class GameCoordinator {
         }
       });
     });
+    
   }
 
   setUiDimensions() {
@@ -1679,6 +1683,30 @@ class GameCoordinator {
       this.soundManager.play('game_start');
     }
 
+    seconds = 0;
+    minutes = 0;
+    clearInterval(timerId);
+    timerId = setInterval(function() {
+      if (seconds < 60){
+        seconds += 1;
+      } else {
+        seconds = 0;
+        minutes += 1;
+      }
+      let time = document.getElementById("timer-display");
+      if (seconds < 10 && minutes < 10){
+        time.innerHTML = '0'+minutes + ':' + '0'+seconds;
+      }else {
+        if (minutes < 10){
+          time.innerHTML = '0'+minutes + ':' + seconds;
+        }else {
+          if (seconds < 10){
+          time.innerHTML = minutes + ':' + '0'+seconds;
+        }else{
+          time.innerHTML = minutes + ':' + seconds;
+        }
+      }
+    }}, 1000);
     this.scaredGhosts = [];
     this.eyeGhosts = 0;
     this.allowPacmanMovement = false;
@@ -1691,13 +1719,13 @@ class GameCoordinator {
 
     this.displayText({ left, top }, 'ready', duration, width, height);
     this.updateExtraLivesDisplay();
-
+    
     new Timer(() => {
       this.allowPause = true;
       this.cutscene = false;
       this.soundManager.setCutscene(this.cutscene);
       this.soundManager.setAmbience(this.determineSiren(this.remainingDots));
-
+      
       this.allowPacmanMovement = true;
       this.pacman.moving = true;
 
@@ -1705,7 +1733,6 @@ class GameCoordinator {
         const ghostRef = ghost;
         ghostRef.moving = true;
       });
-
       this.ghostCycle('scatter');
 
       this.idleGhosts = [this.pinky, this.inky, this.clyde];
@@ -1948,6 +1975,9 @@ class GameCoordinator {
    * the player has remaining lives.
    */
   deathSequence() {
+    seconds = 0;
+    minutes = 0;
+    clearInterval(timerId);
     this.allowPause = false;
     this.cutscene = true;
     this.soundManager.setCutscene(this.cutscene);
@@ -1999,6 +2029,10 @@ class GameCoordinator {
    * Displays GAME OVER text and displays the menu so players can play again
    */
   gameOver() {
+    
+    seconds = 0;
+    minutes = 0;
+    clearInterval(timerId);
     localStorage.setItem('highScore', this.highScore);
 
     new Timer(() => {
@@ -3211,4 +3245,3 @@ class Timer {
     }
   }
 }
-
