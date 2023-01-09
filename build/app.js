@@ -1879,11 +1879,32 @@ class GameCoordinator {
           this.allowPause = true;
         }
       }, 500);
-
+      clearInterval(timerId);
       this.gameEngine.changePausedState(this.gameEngine.running);
       this.soundManager.play('pause');
 
       if (this.gameEngine.started) {
+        timerId = setInterval(function() {
+          if (seconds < 60){
+            seconds += 1;
+          } else {
+            seconds = 0;
+            minutes += 1;
+          }
+          let time = document.getElementById("timer-display");
+          if (seconds < 10 && minutes < 10){
+            time.innerHTML = '0'+minutes + ':' + '0'+seconds;
+          }else {
+            if (minutes < 10){
+              time.innerHTML = '0'+minutes + ':' + seconds;
+            }else {
+              if (seconds < 10){
+              time.innerHTML = minutes + ':' + '0'+seconds;
+            }else{
+              time.innerHTML = minutes + ':' + seconds;
+            }
+          }
+        }}, 1000);
         this.soundManager.resumeAmbience();
         this.gameUi.style.filter = 'unset';
         this.movementButtons.style.filter = 'unset';
@@ -1907,6 +1928,64 @@ class GameCoordinator {
   }
 
   handleRestartKey() {
+    //pause 
+    if (this.allowPause) {
+      this.allowPause = false;
+
+      setTimeout(() => {
+        if (!this.cutscene) {
+          this.allowPause = true;
+        }
+      }, 500);
+      clearInterval(timerId);
+      this.gameEngine.changePausedState(this.gameEngine.running);
+      this.soundManager.play('pause');
+
+      if (this.gameEngine.started) {
+        timerId = setInterval(function() {
+          if (seconds < 60){
+            seconds += 1;
+          } else {
+            seconds = 0;
+            minutes += 1;
+          }
+          let time = document.getElementById("timer-display");
+          if (seconds < 10 && minutes < 10){
+            time.innerHTML = '0'+minutes + ':' + '0'+seconds;
+          }else {
+            if (minutes < 10){
+              time.innerHTML = '0'+minutes + ':' + seconds;
+            }else {
+              if (seconds < 10){
+              time.innerHTML = minutes + ':' + '0'+seconds;
+            }else{
+              time.innerHTML = minutes + ':' + seconds;
+            }
+          }
+        }}, 1000);
+        this.soundManager.resumeAmbience();
+        this.gameUi.style.filter = 'unset';
+        this.movementButtons.style.filter = 'unset';
+        this.pausedText.style.visibility = 'hidden';
+        this.pauseButton.innerHTML = 'pause';
+        this.activeTimers.forEach((timer) => {
+          timer.resume();
+        });
+      } else {
+        this.soundManager.stopAmbience();
+        this.soundManager.setAmbience('pause_beat', true);
+        this.gameUi.style.filter = 'blur(5px)';
+        this.movementButtons.style.filter = 'blur(5px)';
+        this.pausedText.style.visibility = 'visible';
+        this.pauseButton.innerHTML = 'play_arrow';
+        this.activeTimers.forEach((timer) => {
+          timer.pause();
+        });
+      }
+    }
+
+    // pause
+    
     this.leftCover.style.left = '-50%';
     this.rightCover.style.right = '-50%';
     this.mainMenu.style.opacity = 0;
@@ -1921,6 +2000,7 @@ class GameCoordinator {
       this.firstGame = false;
       this.init();
     }
+      
     this.startGameplay(true);
     this.gameEngine.changePausedState(this.gameEngine.running);
       this.soundManager.play('pause');
@@ -1929,7 +2009,9 @@ class GameCoordinator {
         this.movementButtons.style.filter = 'unset';
         this.pausedText.style.visibility = 'hidden';
         this.pauseButton.innerHTML = 'pause';
-
+        this.activeTimers.forEach((timer) => {
+                timer.resume();
+              });
   }
 
   /**
