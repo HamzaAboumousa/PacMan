@@ -1,4 +1,4 @@
-# PacManZwin
+# PacMan
 ![Logo](https://raw.githubusercontent.com/HamzaAboumousa/PacMan/main/pacman_logo.png)
 
 
